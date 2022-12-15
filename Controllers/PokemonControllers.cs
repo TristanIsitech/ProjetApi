@@ -69,21 +69,24 @@ namespace ProjetApi.Controllers
             }
         }
 
-        // [HttpDelete("DeleteAll")]
-        // public async Task<ActionResult<Pokemon>> DeleteAll()
-        // {
-        //     try
-        //     {
-        //         if (pokemon == null) return Ok("Pokemon introuvable !!");
-        //         _context.Pokemons.Remove(pokemon);
-        //         await _context.SaveChangesAsync();
-        //         return Ok("Le Pokemon a bien été supprimé");
-        //     }
-        //     catch (Exception)
-        //     {
-        //         return StatusCode(StatusCodes.Status500InternalServerError,
-        //             "Error retrieving data from the database");
-        //     }
-        // }
+        [HttpDelete("DeleteAll")]
+        public async Task<ActionResult<Pokemon>> DeleteAll()
+        {
+            try
+            {
+                List<Pokemon> pokemons = await _context.Pokemons.ToListAsync();
+
+                foreach(Pokemon pokemon in pokemons){
+                    _context.Pokemons.Remove(pokemon);
+                }
+                await _context.SaveChangesAsync();
+                return Ok("Les Pokemons ont bien été supprimés");
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database");
+            }
+        }
     }
 }
