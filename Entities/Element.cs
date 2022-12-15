@@ -4,6 +4,11 @@ namespace ProjetApi.Entities
 {
     public class Element
     {
+        public Element(string sname, List<Pokemon> spokemon){
+            name = sname;
+            pokemon = spokemon;
+        }
+
         [Key]
         [Required]
         public string name { get; set; }

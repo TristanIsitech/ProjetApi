@@ -22,7 +22,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Pokemon>>> GetAllElement()
         {
-            return Ok(await _context.Pokemons.ToListAsync());
+            return Ok(await _context.Elements.ToListAsync());
         }
     }
 }

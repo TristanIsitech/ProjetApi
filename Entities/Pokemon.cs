@@ -6,11 +6,14 @@ namespace ProjetApi.Entities
     public class Pokemon
     {
         [Key]
+        [Required]
         public int numero { get; set; }
         // Forçage du type varchar au lieu de longtext par défaut 
+        [Required]
         [Column(TypeName = "varchar(255)")]
         public string name { get; set; }
-        
+
+        [Required]
         // Clée entrangère vers element
         public string element_name { get; set; }
         public Element? element { get; set; }

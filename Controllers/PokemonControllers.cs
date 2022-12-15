@@ -30,7 +30,18 @@ namespace ProjetApi.Controllers
             if(pokemon == null){
                 return BadRequest();
             }
+            // On ajout le pokemon
             await _context.Pokemons.AddAsync(pokemon);
+
+            // NE MARCHE PAS !! 
+            // ======
+            // On prend la nouvelle list de pokemon de ce type 
+            List<Pokemon> pokemons = await _context.Pokemons.Where(p => p.element_name == pokemon.element_name).ToListAsync();
+            // On ajout la list de pokemon au type en question
+            _context.Elements.Update(new Element(pokemon.element_name,pokemons));
+            // ======
+
+            // On effectue les changements 
             await _context.SaveChangesAsync();
             return Ok("Pokemon créer !");
         }
@@ -50,14 +61,28 @@ namespace ProjetApi.Controllers
             }
         }
 
+        // For update a Pokemon
+        // NE MARCHE PAS !! 
+        [HttpPatch]
+        public async Task<ActionResult<Pokemon>> ModifierPokemon([FromBody]Pokemon newPokemon)
+        {
+            // _context.Pokemons.AsNoTracking();
+            Pokemon? oldPokemon = _context.Pokemons.FirstOrDefault(p => p.numero == newPokemon.numero);
+
+            if (oldPokemon == null) return BadRequest("Erreur dans l'ajout");
+            _context.Pokemons.Update(newPokemon);
+            await _context.SaveChangesAsync();
+            return Ok("Le pokemon a bien été modifié");
+        }
+
         // For delete a pokemon
-        [HttpDelete("DeleteByName")]
-        public async Task<ActionResult<Pokemon>> DeleteByName([FromBody]string PokemonName)
+        [HttpDelete("DeleteByNumero")]
+        public async Task<ActionResult<Pokemon>> DeleteByNumero([FromBody]int PokemonNumber)
         {
             try
             {
-                Pokemon? pokemon = _context.Pokemons.FirstOrDefault(p => p.name == PokemonName);
-                if (pokemon == null) return Ok("Pokemon introuvable !!");
+                Pokemon? pokemon = _context.Pokemons.FirstOrDefault(p => p.numero == PokemonNumber);
+                if (pokemon == null) return BadRequest("Pokemon introuvable !!");
                 _context.Pokemons.Remove(pokemon);
                 await _context.SaveChangesAsync();
                 return Ok("Le Pokemon a bien été supprimé");
